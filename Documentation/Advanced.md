@@ -13,7 +13,7 @@ We'll start with the custom `Deserializer`. It will simply pass along the
 `NSData` if it exists:
 
 ```swift
-struct StringDeserializer: Deserializer {
+struct DataDeserializer: Deserializer {
   func deserialize(data: NSData?) -> Result<AnyObject, SwishError> {
     guard let data = data where data.length > 0 else {
       return .Success(NSNull())
@@ -78,7 +78,7 @@ Now, we're ready to make our request:
 ```swift
 let client = APIClient(
   requestPerformer: NetworkRequestPerformer(),
-  deserializer: StringDeserializer()
+  deserializer: DataDeserializer()
 )
 let request = AuthorizedRequest()
 
@@ -86,3 +86,5 @@ let dataTask = client.performRequest(request) { (result: Result<Bool, SwishError
   // whatever you need to do
 }
 ```
+
+A simplyfing change we could make would be to implement `Parser` whose `Representation` would be `Bool`, rather than `String`, allowing us to avoid overriding the `parse` function in `AuthorizedRequest`. We'll leave that as an exercise to the reader!
